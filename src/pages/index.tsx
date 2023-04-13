@@ -1,12 +1,26 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import { useState } from "react";
 
 import { api } from "~/utils/api";
 
-const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+const metrics = {
+  last28days: {
+    revenue: 4000,
+    installs: 100
+  },
+  current: {
+    revenue: 4500,
+    installs: 300
+  }
+}
 
+const Home: NextPage = () => {
+  const [responseText, setResponseText] = useState<string>()
+  api.openai.getResponse.useQuery(metrics, {refetchOnWindowFocus: false, onSuccess: (data) => {setResponseText(data.results?.choices?.[0]?.text)
+  
+}})
   return (
     <>
       <Head>
@@ -43,9 +57,8 @@ const Home: NextPage = () => {
               </div>
             </Link>
           </div>
-          <p className="text-2xl text-white">
-            {hello.data ? hello.data.greeting : "Loading tRPC query..."}
-          </p>
+          <p>fkljshfalksjf</p>
+          <p>{responseText}</p>
         </div>
       </main>
     </>
