@@ -42,9 +42,9 @@ function Home() {
           <h2 className="text-xl font-semibold">
             Generate a response for your data on social media!
           </h2>
-          <form className="flex flex-col justify-between gap-4 rounded-xl bg-stone-700 p-6">
+          <form className="flex flex-col justify-between gap-8 rounded-xl bg-stone-700 p-6">
             <h3 className="font-semibold">
-              Select the specific metrics you want to share
+              Select the specific metrics you want to share.
             </h3>
             <Select
               labelName="Prior Days"
@@ -59,9 +59,10 @@ function Home() {
                 </option>
               ))}
             </Select>
-            <div className="flex flex-wrap justify-evenly gap-2 px-8">
+            <div className="flex flex-wrap justify-evenly gap-2">
               {Object.entries(METRICS).map(([key, value]) => (
                 <Checkbox
+                  className="mx-2"
                   key={key}
                   labelName={value}
                   name={key}
@@ -76,8 +77,15 @@ function Home() {
                 />
               ))}
             </div>
-            <h3>Your current data:</h3>
-            {data && JSON.stringify(data, null, 2)}
+
+            {data && (
+              <div className="flex flex-col gap-2">
+                <h3 className="text-sm font-semibold">Your current data:</h3>
+                <pre className="rounded-xl border border-violet-300 bg-stone-900 p-2 text-sm">
+                  {JSON.stringify(data, null, 2)}
+                </pre>
+              </div>
+            )}
             <div className="flex w-full justify-evenly gap-2">
               <Button type="button" onClick={() => setSocialMedia("LinkedIn")}>
                 <span>
