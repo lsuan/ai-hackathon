@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { useState } from "react";
+import { RiLinkedinBoxFill, RiTwitterFill } from "react-icons/ri";
 import Response from "~/components/Response";
 import Button from "~/components/ui/Button";
 import Checkbox from "~/components/ui/Checkbox";
@@ -41,43 +42,57 @@ function Home() {
           <h2 className="text-xl font-semibold">
             Generate a response for your data on social media!
           </h2>
-          <h3 className="text-lg font-semibold">
-            Select the specific metrics you want to share
-          </h3>
-          <Select
-            labelName="Prior Days"
-            onChange={(e) => setPriorDate(Number(e.target.value) as PriorDate)}
-            value={priorDate}
-          >
-            {PRIOR_DATE_OPTIONS.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </Select>
-          <div className="flex flex-wrap justify-evenly gap-4 px-8">
-            {Object.entries(METRICS).map(([key, value]) => (
-              <Checkbox
-                key={key}
-                labelName={value}
-                name={key}
-                value={key}
-                onClick={() =>
-                  setSelectedMetrics((metrics) =>
-                    metrics.includes(key)
-                      ? metrics.filter((metric) => metric !== key)
-                      : [...metrics, key]
-                  )
-                }
-              />
-            ))}
-          </div>
-          <h3>Your current data:</h3>
-          {data && JSON.stringify(data, null, 2)}
-          <div className="flex w-full justify-evenly gap-2">
-            <Button onClick={() => setSocialMedia("LinkedIn")}>LinkedIn</Button>
-            <Button onClick={() => setSocialMedia("Twitter")}>Twitter</Button>
-          </div>
+          <form className="flex flex-col justify-between gap-4 rounded-xl bg-stone-700 p-6">
+            <h3 className="font-semibold">
+              Select the specific metrics you want to share
+            </h3>
+            <Select
+              labelName="Prior Days"
+              onChange={(e) =>
+                setPriorDate(Number(e.target.value) as PriorDate)
+              }
+              value={priorDate}
+            >
+              {PRIOR_DATE_OPTIONS.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </Select>
+            <div className="flex flex-wrap justify-evenly gap-2 px-8">
+              {Object.entries(METRICS).map(([key, value]) => (
+                <Checkbox
+                  key={key}
+                  labelName={value}
+                  name={key}
+                  value={key}
+                  onClick={() =>
+                    setSelectedMetrics((metrics) =>
+                      metrics.includes(key)
+                        ? metrics.filter((metric) => metric !== key)
+                        : [...metrics, key]
+                    )
+                  }
+                />
+              ))}
+            </div>
+            <h3>Your current data:</h3>
+            {data && JSON.stringify(data, null, 2)}
+            <div className="flex w-full justify-evenly gap-2">
+              <Button type="button" onClick={() => setSocialMedia("LinkedIn")}>
+                <span>
+                  <RiLinkedinBoxFill className="text-2xl" />
+                </span>
+                LinkedIn
+              </Button>
+              <Button type="button" onClick={() => setSocialMedia("Twitter")}>
+                <span>
+                  <RiTwitterFill className="text-2xl" />
+                </span>
+                Twitter
+              </Button>
+            </div>
+          </form>
           {isQueryEnabled && <Response data={data} socialMedia={socialMedia} />}
         </div>
       </main>

@@ -8,9 +8,9 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
 function Select({ children, labelName, ...rest }: SelectProps) {
   return (
     <fieldset>
-      <label className="mr-2 font-semibold">{labelName}</label>
+      <label className="mr-2 text-sm font-semibold">{labelName}</label>
       <select
-        className="w-fit rounded-xl bg-stone-700 p-3 font-medium "
+        className="w-fit cursor-pointer rounded-xl border border-violet-300 bg-stone-700 p-3 font-medium "
         {...rest}
       >
         {children}
