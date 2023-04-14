@@ -19,6 +19,8 @@ const PRIOR_DATE_OPTIONS = [7, 14, 28, 60, 90, 120] as const;
 type SocialMedia = "Twitter" | "LinkedIn";
 type PriorDate = (typeof PRIOR_DATE_OPTIONS)[number];
 
+// TODO: style checkbox + api response
+// TODO: add actual share button
 function Home() {
   const [socialMedia, setSocialMedia] = useState<SocialMedia>();
   const [priorDate, setPriorDate] = useState<PriorDate>(7);
