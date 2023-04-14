@@ -1,33 +1,30 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { useState } from "react";
+import Response from "~/components/Response";
 import Button from "~/components/ui/Button";
-
-import { api } from "~/utils/api";
-
-const metrics = {
-  last28days: {
-    revenue: 4000,
-    installs: 100,
-  },
-  current: {
-    revenue: 4500,
-    installs: 300,
-  },
-};
+import Checkbox from "~/components/ui/Checkbox";
+import Select from "~/components/ui/Select";
 
 type SocialMedia = "Twitter" | "LinkedIn";
-const Home: NextPage = () => {
-  const [responseText, setResponseText] = useState<string>();
-  const [socialMedia, setSocialMedia] = useState<SocialMedia>();
-  // api.openai.getResponse.useQuery(metrics, {
-  //   refetchOnWindowFocus: false,
-  //   onSuccess: (data) => {
-  //     setResponseText(data.results?.choices?.[0]?.text);
-  //   },
-  // });
 
+const METRICS = {
+  appDownloads: "App Downloads",
+  revenue: "Revenue",
+  newRatings: "New Ratings",
+  currentRating: "Current Rating",
+  paidInstalls: "Paid Installs",
+};
+
+const PRIOR_DATE_OPTIONS = [7, 14, 28, 60, 90, 120];
+
+const Home: NextPage = () => {
+  const [socialMedia, setSocialMedia] = useState<SocialMedia>();
+  const [priorDate, setPriorDate] = useState<number>(7);
+  const [selectedMetrics, setSelectedMetrics] = useState<string[]>([]);
+  const data = createData(priorDate, selectedMetrics);
+  const isQueryEnabled = data !== undefined && socialMedia !== undefined;
+  console.log(selectedMetrics);
   return (
     <>
       <Head>
@@ -41,16 +38,85 @@ const Home: NextPage = () => {
       <main className="flex min-h-screen flex-col items-center justify-center bg-stone-900 text-white">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
           <h1 className="text-3xl font-semibold">Share Data to Social Media</h1>
-          <p>Generate a response for social media!</p>
+          <h2 className="text-xl font-semibold">
+            Generate a response for your data on social media!
+          </h2>
+          <h3 className="text-lg font-semibold">
+            Select the specific metrics you want to share
+          </h3>
+          <Select
+            labelName="Prior Days"
+            onChange={(e) => setPriorDate(Number(e.target.value))}
+          >
+            {PRIOR_DATE_OPTIONS.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </Select>
+          <div className="flex flex-wrap justify-evenly gap-4 px-8">
+            {Object.entries(METRICS).map(([key, value]) => (
+              <Checkbox
+                key={key}
+                labelName={value}
+                name={key}
+                value={key}
+                onClick={() =>
+                  setSelectedMetrics((metrics) =>
+                    metrics.includes(key)
+                      ? metrics.filter((metric) => metric !== key)
+                      : [...metrics, key]
+                  )
+                }
+              />
+            ))}
+          </div>
+          <h3>Your current data:</h3>
+          {data && JSON.stringify(data, null, 2)}
           <div className="flex w-full justify-evenly gap-2">
             <Button onClick={() => setSocialMedia("LinkedIn")}>LinkedIn</Button>
             <Button onClick={() => setSocialMedia("Twitter")}>Twitter</Button>
           </div>
-          <p>{responseText}</p>
+          <Response data={data} isQueryEnabled={isQueryEnabled} />
         </div>
       </main>
     </>
   );
 };
+
+function createData(
+  priorNumber: number,
+  selectedMetrics: string[]
+): Record<string, unknown> | undefined {
+  if (priorNumber === undefined || selectedMetrics.length === 0) {
+    return;
+  }
+
+  const priorData = Object.keys(METRICS).map((metric) => {
+    if (selectedMetrics.includes(metric)) {
+      if (metric === "currentRating") {
+        return [metric, Math.random() * 5];
+      }
+      return [metric, Math.floor(Math.random() * 1000)];
+    } else {
+      return [undefined, undefined];
+    }
+  });
+  const currentData = Object.keys(METRICS).map((metric) => {
+    if (selectedMetrics.includes(metric)) {
+      if (metric === "currentRating") {
+        return [metric, Math.random() * 5];
+      }
+      return [metric, Math.floor(Math.random() * 1000)];
+    } else {
+      return [undefined, undefined];
+    }
+  });
+
+  return {
+    [`last${priorNumber}Days`]: Object.fromEntries(priorData) as unknown,
+    currentPeriod: Object.fromEntries(currentData),
+  };
+}
 
 export default Home;
