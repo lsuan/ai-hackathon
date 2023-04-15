@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { RiShareCircleFill } from "react-icons/ri";
+import {
+  RiCheckboxCircleFill,
+  RiLoader4Line,
+  RiShareCircleFill,
+} from "react-icons/ri";
+import { api } from "~/utils/api";
 import Button from "./ui/Button";
 
 interface ResponseProps {
@@ -10,41 +15,44 @@ interface ResponseProps {
 function Response({ data, socialMedia }: ResponseProps) {
   const [responseText, setResponseText] = useState<string>();
   const [sentText, setSentText] = useState<string>();
-  // const { isLoading } = api.openai.getResponse.useQuery(
-  //   {
-  //     data,
-  //     socialMedia,
-  //   },
-  //   {
-  //     refetchOnWindowFocus: false,
-  //     onSuccess: (data) => {
-  //       setResponseText(data.results?.choices?.[0]?.text);
-  //     },
-  //   }
-  // );
-  // if (isLoading) {
-  //   return <p>Generating response...</p>;
-  // }
+  console.log(socialMedia);
+  const { isLoading } = api.openai.getResponse.useQuery(
+    {
+      data,
+      socialMedia,
+    },
+    {
+      refetchOnWindowFocus: false,
+      onSuccess: (data) => {
+        setResponseText(data?.results?.choices?.[0]?.text);
+      },
+    }
+  );
+
   return (
-    <div className="w-full rounded-xl bg-stone-700 p-6 text-center">
-      {/* {isLoading ? (
+    <div className="flex w-full flex-col items-center gap-8 rounded-xl bg-stone-700 p-6 text-center">
+      {isLoading ? (
         <RiLoader4Line className="animate-spin text-2xl text-violet-300" />
       ) : (
         <>
-          <h3 className="mb-4 font-semibold">Response</h3>
+          <h3 className="font-semibold">Response</h3>
           <p>{responseText}</p>
         </>
-      )} */}
-      <Button
-        className="mx-auto"
-        onClick={() => setSentText(`Shared to ${socialMedia}!`)}
-      >
+      )}
+      <Button onClick={() => setSentText(`Shared to ${socialMedia}!`)}>
         <span>
           <RiShareCircleFill className="text-xl" />
         </span>
         Share
       </Button>
-      {sentText && <p className="mt-4">{sentText}</p>}
+      {sentText && (
+        <div className="flex items-center gap-2">
+          <span>
+            <RiCheckboxCircleFill className="text-xl text-violet-300" />
+          </span>
+          <p>{sentText}</p>
+        </div>
+      )}
     </div>
   );
 }

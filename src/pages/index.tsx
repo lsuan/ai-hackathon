@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import Response from "~/components/Response";
 import Button from "~/components/ui/Button";
 import Checkbox from "~/components/ui/Checkbox";
@@ -24,8 +24,13 @@ function Home() {
   const [socialMedia, setSocialMedia] = useState<SocialMedia>("LinkedIn");
   const [priorDate, setPriorDate] = useState<PriorDate>(7);
   const [selectedMetrics, setSelectedMetrics] = useState<string[]>([]);
+  const [isQueryEnabled, setIsQueryEnabled] = useState<boolean>(false);
   const data = createData(priorDate, selectedMetrics);
-  const isQueryEnabled = data !== undefined && socialMedia !== undefined;
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    setIsQueryEnabled(true);
+  };
 
   return (
     <>
@@ -47,7 +52,7 @@ function Home() {
             <h3 className="font-semibold">
               Select the specific metrics you want to share.
             </h3>
-            <div className="flex justify-center gap-8">
+            <div className="flex justify-center gap-12">
               <Select
                 labelName="Prior Days"
                 onChange={(e) =>
@@ -61,7 +66,14 @@ function Home() {
                   </option>
                 ))}
               </Select>
-              <Select labelName="Share to: ">
+              <Select
+                labelName="Share to: "
+                value={socialMedia}
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setSocialMedia(e.target.value as SocialMedia);
+                }}
+              >
                 <option value="LinkedIn">LinkedIn</option>
                 <option value="Twitter">Twitter</option>
               </Select>
@@ -93,24 +105,16 @@ function Home() {
                 </pre>
               </div>
             )}
-            {/* <div className="flex w-full justify-evenly gap-2">
-              <Button type="button" onClick={() => setSocialMedia("LinkedIn")}>
-                <span>
-                  <RiLinkedinBoxFill className="text-2xl" />
-                </span>
-                LinkedIn
-              </Button>
-              <Button type="button" onClick={() => setSocialMedia("Twitter")}>
-                <span>
-                  <RiTwitterFill className="text-2xl" />
-                </span>
-                Twitter
-              </Button>
-            </div> */}
-
-            <Button className="w-fit self-center">Generate Response</Button>
+            <Button
+              className="w-fit self-center"
+              onClick={(e) => handleSubmit(e)}
+            >
+              Generate Response
+            </Button>
           </form>
-          {isQueryEnabled && <Response data={data} socialMedia={socialMedia} />}
+          {isQueryEnabled && data && (
+            <Response data={data} socialMedia={socialMedia} />
+          )}
         </div>
       </main>
     </>

@@ -1,9 +1,7 @@
-import { z } from "zod";
-
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-
 import { Configuration, OpenAIApi } from "openai";
+import { z } from "zod";
 import { env } from "~/env.mjs";
+import { createTRPCRouter, publicProcedure } from "../trpc";
 
 const configuration = new Configuration({
   apiKey: env.OPENAPI_KEY,
@@ -11,12 +9,22 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 function generatePrompt(data: Record<string, unknown>, socialMedia: string) {
-  return `Create a ${socialMedia} post for me that summarizes the following data: ${JSON.stringify(
-    data
-  )}.
+  let prompt = "";
+
+  if (socialMedia === "Twitter") {
+    prompt +=
+      "Create a Twitter thread or post for me that summarizes the following data: ";
+  } else {
+    prompt +=
+      "Create a LinkedIn post for me that summarizes the following data: ";
+  }
+  prompt += `${JSON.stringify(data)}.
     Make sure it highlights the positive outcomes.
     The team wants to celebrate the current success of their app and is getting the data from Appfigures.
-    Appfigures is a tool that helps developers track their app's performance.`;
+    Appfigures is a tool that helps developers track their app's performance.
+  `;
+
+  return prompt;
 }
 
 export const openaiRouter = createTRPCRouter({
@@ -39,22 +47,7 @@ export const openaiRouter = createTRPCRouter({
         });
         return { results: completion.data };
       } catch (error) {
-        // Consider adjusting the error handling logic for your use case
-        if (error.response) {
-          console.error(error.response.status, error.response.data);
-          return {
-            error: {
-              message: error.response.data,
-            },
-          };
-        } else {
-          console.error(`Error with OpenAI API request: ${error.message}`);
-          return {
-            error: {
-              message: "An error occurred during your request.",
-            },
-          };
-        }
+        console.log(error, error);
       }
     }),
 });
