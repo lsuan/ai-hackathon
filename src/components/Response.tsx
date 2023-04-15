@@ -30,12 +30,12 @@ function Response({ data, socialMedia }: ResponseProps) {
   );
 
   return (
-    <div className="flex w-full flex-col items-center gap-8 rounded-xl bg-stone-700 p-6 text-center">
+    <div className="flex w-full flex-col items-center gap-8 rounded-xl bg-stone-700 p-6">
       {isLoading ? (
         <RiLoader4Line className="animate-spin text-2xl text-violet-300" />
       ) : (
         <>
-          <h3 className="font-semibold">Response</h3>
+          <h3 className="self-start font-semibold">Response</h3>
           <p>{responseText}</p>
         </>
       )}

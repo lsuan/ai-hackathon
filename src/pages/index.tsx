@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { useState, type FormEvent } from "react";
+import { RiEditCircleFill } from "react-icons/ri";
 import Response from "~/components/Response";
 import Button from "~/components/ui/Button";
 import Checkbox from "~/components/ui/Checkbox";
@@ -18,8 +19,6 @@ const PRIOR_DATE_OPTIONS = [7, 14, 28, 60, 90, 120] as const;
 type SocialMedia = "Twitter" | "LinkedIn";
 type PriorDate = (typeof PRIOR_DATE_OPTIONS)[number];
 
-// TODO: style checkbox + api response
-// TODO: add actual share button
 function Home() {
   const [socialMedia, setSocialMedia] = useState<SocialMedia>("LinkedIn");
   const [priorDate, setPriorDate] = useState<PriorDate>(7);
@@ -42,12 +41,9 @@ function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="gjustify-center flex min-h-screen flex-col items-center bg-stone-900 text-white">
-        <div className="container flex flex-col items-center justify-center gap-12 px-12 py-8 ">
+      <main className="flex min-h-screen flex-col items-center justify-center bg-stone-900 text-white">
+        <div className="container flex max-w-[46rem] flex-col items-center justify-center gap-12 px-12 py-8">
           <h1 className="text-3xl font-semibold">Share Data to Social Media</h1>
-          <h2 className="text-xl font-semibold">
-            Generate a response for your data on social media!
-          </h2>
           <form className="flex flex-col justify-between gap-8 rounded-xl bg-stone-700 p-6">
             <h3 className="font-semibold">
               Select the specific metrics you want to share.
@@ -67,7 +63,7 @@ function Home() {
                 ))}
               </Select>
               <Select
-                labelName="Share to: "
+                labelName="Share To"
                 value={socialMedia}
                 onChange={(e) => {
                   console.log(e.target.value);
@@ -99,7 +95,7 @@ function Home() {
 
             {data && (
               <div className="flex flex-col gap-2">
-                <h3 className="text-sm font-semibold">Your current data:</h3>
+                <h3 className="text-sm font-semibold">Your Current Data</h3>
                 <pre className="rounded-xl border border-violet-300 bg-stone-900 p-2 text-sm">
                   {JSON.stringify(data, null, 2)}
                 </pre>
@@ -109,6 +105,9 @@ function Home() {
               className="w-fit self-center"
               onClick={(e) => handleSubmit(e)}
             >
+              <span>
+                <RiEditCircleFill className="text-xl" />
+              </span>
               Generate Response
             </Button>
           </form>
