@@ -1,6 +1,5 @@
 import Head from "next/head";
 import { useState } from "react";
-import { RiLinkedinBoxFill, RiTwitterFill } from "react-icons/ri";
 import Response from "~/components/Response";
 import Button from "~/components/ui/Button";
 import Checkbox from "~/components/ui/Checkbox";
@@ -22,7 +21,7 @@ type PriorDate = (typeof PRIOR_DATE_OPTIONS)[number];
 // TODO: style checkbox + api response
 // TODO: add actual share button
 function Home() {
-  const [socialMedia, setSocialMedia] = useState<SocialMedia>();
+  const [socialMedia, setSocialMedia] = useState<SocialMedia>("LinkedIn");
   const [priorDate, setPriorDate] = useState<PriorDate>(7);
   const [selectedMetrics, setSelectedMetrics] = useState<string[]>([]);
   const data = createData(priorDate, selectedMetrics);
@@ -38,7 +37,7 @@ function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-stone-900 text-white">
+      <main className="gjustify-center flex min-h-screen flex-col items-center bg-stone-900 text-white">
         <div className="container flex flex-col items-center justify-center gap-12 px-12 py-8 ">
           <h1 className="text-3xl font-semibold">Share Data to Social Media</h1>
           <h2 className="text-xl font-semibold">
@@ -48,19 +47,25 @@ function Home() {
             <h3 className="font-semibold">
               Select the specific metrics you want to share.
             </h3>
-            <Select
-              labelName="Prior Days"
-              onChange={(e) =>
-                setPriorDate(Number(e.target.value) as PriorDate)
-              }
-              value={priorDate}
-            >
-              {PRIOR_DATE_OPTIONS.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </Select>
+            <div className="flex justify-center gap-8">
+              <Select
+                labelName="Prior Days"
+                onChange={(e) =>
+                  setPriorDate(Number(e.target.value) as PriorDate)
+                }
+                value={priorDate}
+              >
+                {PRIOR_DATE_OPTIONS.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </Select>
+              <Select labelName="Share to: ">
+                <option value="LinkedIn">LinkedIn</option>
+                <option value="Twitter">Twitter</option>
+              </Select>
+            </div>
             <div className="flex flex-wrap justify-evenly gap-2">
               {Object.entries(METRICS).map(([key, value]) => (
                 <Checkbox
@@ -88,7 +93,7 @@ function Home() {
                 </pre>
               </div>
             )}
-            <div className="flex w-full justify-evenly gap-2">
+            {/* <div className="flex w-full justify-evenly gap-2">
               <Button type="button" onClick={() => setSocialMedia("LinkedIn")}>
                 <span>
                   <RiLinkedinBoxFill className="text-2xl" />
@@ -101,7 +106,9 @@ function Home() {
                 </span>
                 Twitter
               </Button>
-            </div>
+            </div> */}
+
+            <Button className="w-fit self-center">Generate Response</Button>
           </form>
           {isQueryEnabled && <Response data={data} socialMedia={socialMedia} />}
         </div>
@@ -113,7 +120,7 @@ function Home() {
 const createMetrics = (selectedMetrics: string[], metric: string) => {
   if (selectedMetrics.includes(metric)) {
     if (metric === "currentRating") {
-      return [metric, Math.random() * 5];
+      return [metric, (Math.random() * 5).toFixed(2)];
     }
     return [metric, Math.floor(Math.random() * 1000)];
   } else {

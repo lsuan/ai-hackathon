@@ -8,18 +8,19 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
 
 function Select({ children, labelName, ...rest }: SelectProps) {
   return (
-    <fieldset className="relative w-fit">
-      <label className="mr-2 text-sm font-semibold">{labelName}</label>
-      <select
-        className="w-16 cursor-pointer appearance-none rounded-xl border border-violet-300 bg-stone-700 p-3 font-medium "
-        {...rest}
-      >
-        {children}
-      </select>
-      <RiArrowDropDownLine
-        className="absolute right-2 top-1/2 -translate-y-1/2"
-        size="1.5rem"
-      />
+    <fieldset className=" flex w-fit flex-col items-center gap-1">
+      <label className="mr-2 w-fit text-sm font-semibold">{labelName}</label>
+      <div className="flex items-center rounded-xl border border-violet-300">
+        <select
+          className="w-full cursor-pointer appearance-none bg-transparent p-3 font-medium"
+          {...rest}
+        >
+          {children}
+        </select>
+        <span>
+          <RiArrowDropDownLine size="1.5rem" />
+        </span>
+      </div>
     </fieldset>
   );
 }
