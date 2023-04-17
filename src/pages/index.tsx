@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { RiEditCircleFill } from "react-icons/ri";
 import Response from "~/components/Response";
 import Button from "~/components/ui/Button";
@@ -44,7 +44,11 @@ function Home() {
       <main className="flex min-h-screen flex-col items-center justify-center bg-stone-900 text-white">
         <div className="container flex max-w-[46rem] flex-col items-center justify-center gap-12 px-12 py-8">
           <h1 className="text-3xl font-semibold">Share Data to Social Media</h1>
-          <form className="flex flex-col justify-between gap-8 rounded-xl bg-stone-700 p-6">
+          <form
+            className="flex flex-col justify-between gap-8 rounded-xl bg-stone-700 p-6"
+            onSubmit={handleSubmit}
+            onChange={() => setIsQueryEnabled(false)}
+          >
             <h3 className="font-semibold">
               Select the specific metrics you want to share.
             </h3>
@@ -66,7 +70,6 @@ function Home() {
                 labelName="Share To"
                 value={socialMedia}
                 onChange={(e) => {
-                  console.log(e.target.value);
                   setSocialMedia(e.target.value as SocialMedia);
                 }}
               >
@@ -101,10 +104,7 @@ function Home() {
                 </pre>
               </div>
             )}
-            <Button
-              className="w-fit self-center"
-              onClick={(e) => handleSubmit(e)}
-            >
+            <Button type="submit" className="w-fit self-center">
               <span>
                 <RiEditCircleFill className="text-xl" />
               </span>

@@ -2,7 +2,7 @@ import { type AppType } from "next/app";
 
 import { api } from "~/utils/api";
 
-import { Inter, Noto_Sans_KR, Poppins } from "next/font/google";
+import { Poppins } from "next/font/google";
 
 import "~/styles/globals.css";
 
