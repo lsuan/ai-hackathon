@@ -13,15 +13,15 @@ function generatePrompt(data: Record<string, unknown>, socialMedia: string) {
 
   if (socialMedia === "Twitter") {
     prompt +=
-      "Create a Twitter thread or post for me that summarizes the following data: ";
+      "Create a tweet or post for me that summarizes the following data: ";
   } else {
     prompt +=
       "Create a LinkedIn post for me that summarizes the following data: ";
   }
   prompt += `${JSON.stringify(data)}.
-    Make sure it highlights the positive outcomes.
     The team wants to celebrate the current success of their app and is getting the data from Appfigures.
     Appfigures is a tool that helps developers track their app's performance.
+    Make sure it highlights the positive outcomes, includes some metrics from the data, and tags the Appfigures account.
   `;
 
   return prompt;
@@ -42,7 +42,7 @@ export const openaiRouter = createTRPCRouter({
         const completion = await openai.createCompletion({
           model: "text-davinci-003",
           prompt: generatePrompt(data, socialMedia),
-          temperature: 0.5,
+          temperature: 0.8,
           max_tokens: 200,
         });
         return { results: completion.data };

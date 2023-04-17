@@ -1,8 +1,9 @@
 import { useState } from "react";
 import {
   RiCheckboxCircleFill,
+  RiLinkedinBoxFill,
   RiLoader4Line,
-  RiShareCircleFill,
+  RiTwitterFill,
 } from "react-icons/ri";
 import { api } from "~/utils/api";
 import Button from "./ui/Button";
@@ -40,10 +41,14 @@ function Response({ data, socialMedia }: ResponseProps) {
         <>
           <h3 className="self-start font-semibold">Response</h3>
           <p>{responseText}</p>
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col gap-2">
             <Button onClick={() => setSentText(`Shared to ${socialMedia}!`)}>
-              <span>
-                <RiShareCircleFill className="text-xl" />
+              <span className="text-xl">
+                {socialMedia === "LinkedIn" ? (
+                  <RiLinkedinBoxFill />
+                ) : (
+                  <RiTwitterFill />
+                )}
               </span>
               Share
             </Button>
